@@ -8,3 +8,8 @@ plot(p224r63_2011)
 #plottaggio singole bande
 #colour change
 cl <- colorRampPalette(c("black","grey","light grey"))(100)
+#fare plot della nuova immagine
+plot(p224r63_2011, col=cl)
+#colour change-> new
+cl <- colorRampPalette(c("magenta","red","yellow","green","orange"))(100)
+plot(p224r63_2011, col=cl)
