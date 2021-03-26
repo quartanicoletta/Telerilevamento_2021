@@ -98,3 +98,4 @@ plotRGB(p224r63_2011,r=3,g=4,b=2,stretch="Lin")
 plotRGB(p224r63_2011,r=3,g=4,b=2,stretch="hist")
 #colorist= plot nello spazio e nel tempo nel sistema RGB
 #installare install.packages("RStoolbox")
+#library(RStoolbox)
