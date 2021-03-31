@@ -84,7 +84,7 @@ plotRGB(p224r63_2011,r=3,g=2,b=4,stretch="Lin")
 pdf("il_mio_primo_pdf_con_R.pdf")
 par(mfrow=c(2,2))
 plotRGB(p224r63_2011,r=3,g=2,b=1,stretch="Lin")
-plotRGB(p224r63_2011,r=4,g=3,b=2,stretch="Lin")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
 plotRGB(p224r63_2011,r=3,g=4,b=2,stretch="Lin")
 plotRGB(p224r63_2011,r=3,g=2,b=4,stretch="Lin")
 dev.off()
@@ -99,3 +99,40 @@ plotRGB(p224r63_2011,r=3,g=4,b=2,stretch="hist")
 #colorist= plot nello spazio e nel tempo nel sistema RGB
 #installare install.packages("RStoolbox")
 #library(RStoolbox)
+#da oggi si utilizzerà il file p224r63_1988_masked
+library(raster)
+setwd("D:/lab/")
+p224r63_2011 <- brick("p224r63_2011_masked.grd")
+#per vedere le particolarità dell'immagine satellitare inserisco p224r63_2011 su R
+#ora inseriamo anche p224r63_1988
+#multitemporal set
+p224r63_1988 <- brick("p224r63_1988_masked.grd")
+#facciamo il plot di p224r63_1988 per visualizzare ogni banda
+plot(p224r63_1988)
+# Bande Landsat per RGB
+#B1 Blue
+#B2 Green
+#B3 Red
+#B4 NIR
+#B5 SWIR
+#B6 TIRS
+#B7 SWIR
+plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin")
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin") #Plot con infrarosso
+#fare par con 1988 e 2011
+par(mfrow=c(2,1))
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
+par(mfrow=c(2,2))
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="hist")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="hist")
+#creare pdf dell'immagine caricata su R
+pdf("confronto_p224r63_1988_p224r63_2011.pdf")
+par(mfrow=c(2,2))
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="hist")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="hist")
+dev.off()
