@@ -1,12 +1,14 @@
 # il mio primo codice in R per il telerilevamento!
+#importo la cartella dal mio sitema operativo 
 setwd("D:/lab/") # Windows
 #install.packages("raster")
 library(raster)
+# la funzione brick genera file multistrato o bande
 p224r63_2011 <- brick("p224r63_2011_masked.grd")
 p224r63_2011
 plot(p224r63_2011)
-#plottaggio singole bande
-#colour change
+#plottaggio singole bande, così da ottenere le info su ogni banda
+#colour ramp palette è un vettore che ci permette di assegnare una tavolozza di colori per il file
 cl <- colorRampPalette(c("black","grey","light grey"))(100)
 #fare plot della nuova immagine
 plot(p224r63_2011, col=cl)
@@ -23,16 +25,15 @@ plot(p224r63_2011, col=cls)
 #B7 SWIR
 # will clean the current graph
 dev.off()
-#$ comando peer legare immagine a una banda
+#$ comando per legare immagine a una banda
 plot(p224r63_2011$B1_sre)
 # plot band 1 with a predefined colut ramp palette
 cls <- colorRampPalette(c("magenta","red","yellow","green","orange"))(100)
 plot(p224r63_2011$B1_sre, col=cls)
-#par= settare dei parametri grafici di più grafici da allegare mf=multiframe mfrow=su righe
+#par= settare dei parametri grafici di più grafici da allegare mf=multiframe mfrow=su righe mfcol= su colonne
 plot(p224r63_2011$B1_sre)
 plot(p224r63_2011$B2_sre)
 par(mfrow=c(1,2))
-# se usi prima le colonne usi mfcol
 #plottare le prime 4 bande di landsat
 par(mfrow=c(4,1))
 plot(p224r63_2011$B1_sre)
