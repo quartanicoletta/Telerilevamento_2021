@@ -2,6 +2,7 @@
 # Greenland increase of temperature
 # Data and code from Emanuela Cosma
 library(raster)
+library(rasterVis)
 setwd("D:/lab/greenland")
 #carichiamo il primo dei file del set, sono singoli dati. Non si usa brick ma raster
 #raster:carichiamo singoli dati, importiamo il primo
@@ -38,4 +39,38 @@ plot(TGr)
 #immagini sovrapposte con schema RGB
 plotRGB(TGr, 1, 2, 3, stretch="Lin")
 plotRGB(TGr, 2, 3, 4, stretch="Lin") #plot con valori della temperatura
-
+#installazione pacchetto metodi di visualizzazione per dati raster
+install.packages("rasterVis") 
+library(rasterVis)
+setwd("D:/lab/greenland")
+rlist <- list.files(pattern="lst")
+rlist
+import <- lapply(rlist,raster)
+import
+TGr <- stack(import)
+TGr
+# levelplots R package: utilizziamo un intero blocco con una singola legenda e plottiamo tutto insieme
+levelplot(TGr)
+cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
+#poi riplottare
+levelplot(TGr, col.regions=cl)
+#possiamo cambiare i titoli delle immagini con la funzione names.attr (per nominare i singoli attributi)
+#main è l'argomento, quindi nel nostro caso il titolo dellla mappa, messo tra virgolette perchè un testo
+levelplot(TGr,col.regions=cl, main="LST variation in time",names.attr=c("July 2000","July 2005", "July 2010", "July 2015"))
+#dati melt, creiamo una lista dei file con pattern comune "melt" o "annual"
+meltlist <- list.files(pattern="melt")
+#importo i file
+melt_import <- lapply(meltlist,raster)
+#raggruppo i file importati
+melt <- stack(melt_import)
+melt
+#posso fare un level plot solo ora con dati melt
+levelplot(melt)
+#valori più alti >scioglimento
+#metricsalgebra applicato alle matrici per lo studio di dati temporali, facciamo la sottrazione tra primo e ultimo dato, mettiamo $ per legare uno strato all'altro
+melt_amount <- melt$X2007annual_melt - melt$X1979annual_melt
+#creo una nuova colorramppalette
+clb <- colorRampPalette(c("blue","white","red"))(100)
+#sia plot che levelplot
+plot(melt_amount, col=clb)
+levelplot(melt_amount, col.regions=clb)
