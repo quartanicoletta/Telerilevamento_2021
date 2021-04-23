@@ -25,3 +25,20 @@ plot(sod$map)
 sun <- brick("The_Sun_viewed_by_Solar_Orbiter_s_PHI_instrument_on_18_June_2020.png")
 sunc <- unsuperClass(sun, nClasses=20)
 plot(sunc$map)
+#classificazione immagni grand canyon data 
+library(raster)
+library(RStoolbox)
+setwd("D:/lab/")
+#caricare immagine RGB 
+gc <- brick("dolansprings_oli_2013088_canyon_lrg.jpg")
+#visualizziamo l'immagine
+plotRGB(gc, r=1,g=2,b=3, stretch="lin")
+#cambiamo il tipo di stretch in histogram
+plotRGB(gc, r=1,g=2,b=3, stretch="hist")
+#utilizziamo la classificazione del pacchetto
+gcc <- unsuperClass(gc, nClasses=3)
+#fare il plot dell'immagine
+plot(gcc$map)
+#facciamo la classificazione in 4 classi
+gcc4 <- unsuperClass(gc, nClasses=4)
+plot(gcc4$map)
