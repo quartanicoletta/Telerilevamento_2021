@@ -66,3 +66,19 @@ difndvi <- ndvi1 - ndvi2
 dev.off()
 cld <- colorRampPalette(c('blue','white','red'))(100) 
 plot(difndvi, col=cld) #visualizziamo le aree in rosso che rappresentano le zone a maggior perdita di vegetazione
+
+
+#importiamo le librerie e  il set della working directory
+library(raster)
+library(RStoolbox)
+#install.packages("rasterdiv")
+library(rasterdiv) #per lavorare con NDVI 
+
+#copertura globale NDVI, farne un plot
+plot(copNDVI)
+#possiamo eliminare i pixel con cbind e i valori che non ci interessano (acqua) vengono riclassificati con reclassify
+copNDVI <- reclassify (copNDVI, cbind (252, 255, NA))
+plot(copNDVI)
+#utilizziamo levevlplot contenuto in rastervis per originare i livelli, perciò richiamiamo la libreria
+library(rasterVis)
+levelplot(copNDVI)
