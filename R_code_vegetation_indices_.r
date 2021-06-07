@@ -1,6 +1,7 @@
 #R_code_vegetation_indices_r.
 #importiamo le librerie e  il set della working directory
 library(raster)
+library(RStoolbox)
 stewd("D:/lab/")
 #con funzione brick importiamo le immagini defor
 defor1 <- brick("defor1.jpg")
@@ -48,3 +49,20 @@ plot(ndvi1, col=cl)
 #possiamo utilizzare direttamente dvi1 perchè abbiamo già il calcolo della sottrazione ottenendo così la medesima immagine
 #ndvi1 <- dvi1 / (defor1$defor1.1 + defor1$defor1.2)
 # plot(ndvi1, col=cl)
+#RStoolbox: troviamo spectralIndices con un solo comando posso controllare tutti gli indici
+ndvi2 <- (defor2$defor2.1 - defor2$defor2.2) / (defor2$defor2.1 + defor2$defor2.2)
+plot(ndvi2, col=cl)
+#possiamo utilizzare direttamente dvi1 perchè abbiamo già il calcolo della sottrazione ottenendo così la medesima immagine
+#ndvi2 <- dvi2 / (defor2$defor2.1 + defor2$defor2.2)
+# plot(ndvi2, col=cl)
+
+#spectralIndices, richiamiamo l'immagine e dove sono le bande usando il numero della banda
+vi <- spectralIndices(defor1, green=3, red=2, nir=1)
+plot(vi, col=cl) #calcolerà tutti gli indici spettrali mettendoli insieme
+vi2 <- spectralIndices(defor2, green=3, red=2, nir=1)
+plot(vi2, col=cl)
+#utilizzare la differenza anche per ndvi
+difndvi <- ndvi1 - ndvi2
+dev.off()
+cld <- colorRampPalette(c('blue','white','red'))(100) 
+plot(difndvi, col=cld) #visualizziamo le aree in rosso che rappresentano le zone a maggior perdita di vegetazione
