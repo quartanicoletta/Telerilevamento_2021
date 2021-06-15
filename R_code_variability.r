@@ -3,6 +3,9 @@
 
 library(raster)
 library(RStoolbox)
+library(ggplot2)
+library(gridExtra)
+library(viridis) 
 
 #fare il set della working directory
 setwd("D:/lab/")
@@ -59,3 +62,43 @@ plot(sentpca$map)
 #vediamo la proporzione di variabilità del modello di ogni singola componente, dove la prima contiene il 67.36804% dell'informazione originale
 summary(sentpca$model)
 
+#per l'analisi controlliamo le componenti della mappa all'interno di sent, e leghiamo il tutto alla prima variabile PC1
+pc1 <- sentpca$map$PC1
+#pc1 verrà sempre associato alla funzione focal, dove invece dell'NDVI stiamo utilizzando pc1
+pc1sd5 <- focal(pc1, w=matrix(1/25, nrow=5, ncol=5), fun=sd)
+clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100)
+plot(pc1sd5, col=clsd)
+
+#funzione surce che salva il pezzo di codice da girare e lo facciamo partire in R,salviamo il pezzo di codice esternamente e lo possiamo poi importare a nostro piacimento
+#pc1 <- sentpca$map$PC1
+#pc1sd7 <- focal(pc1, w=matrix(1/49, nrow=7, ncol=7), fun=sd)
+#plot(pc1sd7)
+source("source_test_lezione.r") #sarà il calcolo di una DVstandard 7x7 su R
+#un intero script da poter richiamare in R con funzione surce
+#con mappa della DVstandard, si usa gglot per plottare e con gridArrange li uniamo tutti insieme, occorre assicurarsi di avere la libreria ggplot2 per questo ora si aggiunge, inseme a GridExtra e Viridis (per i colori in ggplot) 
+source("source_ggplot.r")
+
+
+# https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html
+#creare la finestra in ggplot2,con funzione ggplot, dove inseriamo dei blocchi definendo la geometria della mappa, defianiamo i mapping e le aestetics (lo strato o layer)
+#associamo ogni plot a un oggetto
+p1 <- ggplot() +
+geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
+# Il pacchetto Viridis contiene otto scale di colori: "viridis", la scelta primaria, e cinque alternative con proprietà simili - "magma", "plasma", "inferno", "civids", "mako" e "razzo" - e una mappa dei colori dell'arcobaleno - "turbo".
+scale_fill_viridis()  +
+#aggiungiamo un titolo
+ggtitle("Standard deviation of PC1 by viridis colour scale")
+
+#ripetiamo l'azione cambiando la legenda, utilizzando la funzione option, cambiamo di conseguenza anche il titolo 
+p2 <- ggplot() +
+geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
+scale_fill_viridis(option = "magma")  +
+ggtitle("Standard deviation of PC1 by magma colour scale")
+
+p3 <- ggplot() +
+geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
+scale_fill_viridis(option = "turbo")  +
+ggtitle("Standard deviation of PC1 by turbo colour scale")
+
+#con la funzione grid .arrange metto insieme le tre legende, definendo una sola riga
+grid.arrange(p1, p2, p3, nrow = 1)
