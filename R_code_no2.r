@@ -7,6 +7,7 @@ setwd("D:/lab/EN")
 #2. Importiamo i dati con funzione raster, quindi carichiamo il pacchetto:
 
 library(raster)
+library(RStoolbox) #per l'analisi multivariata
 
 #3. Ora importiamo la prima immagine, per singola banda:
 
@@ -41,19 +42,36 @@ plot(ENdif, col=cls, main:"Difference (January - March)")
 
 #7.  Importare tutte le immagini:
 
-EN1 <- raster("EN_0001.png")
-EN2 <- raster("EN_0002.png")
-EN3 <- raster("EN_0003.png")
-EN4 <- raster("EN_0004.png")
-EN5 <- raster("EN_0005.png")
-EN6 <- raster("EN_0006.png")
-EN7 <- raster("EN_0007.png")
-EN8 <- raster("EN_0008.png")
-EN9 <- raster("EN_0009.png")
-EN10 <- raster("EN_0010.png")
-EN11 <- raster("EN_0011.png")
-EN12 <- raster("EN_0012.png")
-EN13 <- raster("EN_0013.png")
+rlist <- list.files(pattern="EN") #per importare interi set
+rlist
+
+import <- lapply (rlist,ratser)
+import
+
+EN <- stack(import)
+plot (EN, col=cls)
+
+#8. Replicare il plot dell'immagine 1 e 13, usando stack
+
+par (mfrow=c(2,1))
+
+plot(EN$EN_0001, col=cls)
+plot(EN$EN_0013, col=cls)
+
+#9. Effettuare una PCA sulle 13 immagni, tramite stack
+
+ENpca <- rasterPCA(EN)
+summary(ENpca$model)
+
+dev.off()
+plotRGB(ENpca$map, r=1, g=2, b=3, stretch="lin")
+
+#10. calcolare la variabilità nella prima ed ultima immagine, della prima variabile di PCA
+
+PC1sd <- focal(ENpca$map$PC1, w=matrix(1/9, nrow=3, ncol=3), fun=sd)
+
+plot(PC1sd, col=cls)
+
 
 
 
