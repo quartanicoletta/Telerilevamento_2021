@@ -39,5 +39,21 @@ plot(EN1, col=cls, main:"NO2 in January")
 plot(EN13, col=cls, main:"NO2 in March")
 plot(ENdif, col=cls, main:"Difference (January - March)")
 
+#7.  Importare tutte le immagini:
+
+EN1 <- raster("EN_0001.png")
+EN2 <- raster("EN_0002.png")
+EN3 <- raster("EN_0003.png")
+EN4 <- raster("EN_0004.png")
+EN5 <- raster("EN_0005.png")
+EN6 <- raster("EN_0006.png")
+EN7 <- raster("EN_0007.png")
+EN8 <- raster("EN_0008.png")
+EN9 <- raster("EN_0009.png")
+EN10 <- raster("EN_0010.png")
+EN11 <- raster("EN_0011.png")
+EN12 <- raster("EN_0012.png")
+EN13 <- raster("EN_0013.png")
+
 
 
