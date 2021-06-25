@@ -26,18 +26,37 @@ setwd("D:/lab/AQUA")
 #plot(tempdif, col= cls)
 
 
-temp01 <- brick("temp2002.nc")
+temp02 <- brick("temp2002.nc")
+plot(temp02)
+cls <- colorRampPalette(c("red","magenta","yellow"))(100)
+plot(temp02, col=cls)
 plotRGB(temp02, r=1, g=2, b=3, stretch="lin")
-ggRGB(temp02, r=1, g=2, b=3, stretch="lin")
-temp07 <- brick("temp2002.nc")
+
+temp07 <- brick("temp2007.nc")
+plot(temp07)
+cls <- colorRampPalette(c("red","magenta","yellow"))(100)
+plot(temp07, col=cls)
 plotRGB(temp07, r=1, g=2, b=3, stretch="lin")
-ggRGB(temp07, r=1, g=2, b=3, stretch="lin")
-temp14 <- brick("temp2003.nc")
+
+temp14 <- brick("temp2014.nc")
+plot(temp14)
+cls <- colorRampPalette(c("red","magenta","yellow"))(100)
+plot14(temp14, col=cls)
 plotRGB(temp14, r=1, g=2, b=3, stretch="lin")
-ggRGB(temp14, r=1, g=2, b=3, stretch="lin")
+
 temp21 <- brick("temp2021.nc")
+plot(temp21)
+cls <- colorRampPalette(c("red","magenta","yellow"))(100)
+plot(temp21, col=cls)
 plotRGB(temp21, r=1, g=2, b=3, stretch="lin")
-ggRGB(temp21, r=1, g=2, b=3, stretch="lin")
+
+
+par(mfrow=c(4,1))
+plot(temp02, col=cls)
+plot(temp07, col=cls)
+plot(temp14, col=cls)
+plot(temp21, col=cls)
+
 
 
 #per importare tutta la lista di files utilizzo lapply
@@ -56,6 +75,43 @@ cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
 #assegno i nomi
 levelplot(TAq,col.regions=cl, main="Variation of sea surface temperature",names.attr=c("2001","2007", "2014", "2021"))
 
+TAqaggr<- aggregate(TAq, fact=10)
+plotRGB(TAqaggr, r=4, g=3, b=2, stretch="lin")
+TAqaggrPCA <- rasterPCA(TAqaggr)
+summary(TAqaggrPCA$model)
+plot(TAqaggrPCA$map)
+TAqaggrPCA
+plotRGB(TAqaggrPCA$map, r=1,g=2,b=3, stretch="lin")
+str(TAqaggrPCA)
+pc1 <- TAqaggrPCA$map$PC1
+???????????????????????????????????????????
+pc1 <- TAqaggrPCA$map$PC1
+pc1sd5 <- focal(pc1, w=matrix(1/25, nrow=5, ncol=5), fun=sd)
+clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100)
+plot(pc1sd5, col=clsd)
+
+#library(ggplot2)
+#library(viridis) 
+p1 <- ggplot() +
+geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
+scale_fill_viridis(option = "magma")  +
+ggtitle("Standard deviation of PC1 by magma colour scale")
+
+p2 <- ggplot() +
+geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
+scale_fill_viridis(option = "turbo")  +
+ggtitle("Standard deviation of PC1 by turbo colour scale")
+
+p3 <- ggplot() +
+geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
+scale_fill_viridis(option = "mako")  +
+ggtitle("Standard deviation of PC1 by magma colour scale")
+
+p4 <- ggplot() +
+geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
+scale_fill_viridis(option = "inferno")  +
+ggtitle("Standard deviation of PC1 by turbo colour scale")
+grid.arrange(p1, p2, p3, p4, nrow = 2)
 
 
 
@@ -80,24 +136,3 @@ levelplot(TAq,col.regions=cl, main="Variation of sea surface temperature",names.
 
 
 
-
-
-ES21 <- raster("EarthSurface2021.jpg")
-cls <- colorRampPalette(c("red","blue","yellow"))(100)
-plot(ES21, col=cls)
-
-ES02 <- raster("EarthSurface2002.jpg")
-cls <- colorRampPalette(c("red","blue","yellow"))(100)
-plot(ES02, col=cls)
-
-ESdif <- ES21 - ES02
-plot(ESdif, col= cls)
-
-par(mfrow=c(2,1))
-plot(ES21, col=cls, main:"Temperature in 2021")
-plot(ES02, col=cls, main:"Temperature in 2002")
-
-par (mfrow=c(2,1))
-
-plot(ES21$EarthSurface2021.jpg, col=cls)
-plot(ES02$EarthSurface2002.jpg, col=cls)
