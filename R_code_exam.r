@@ -5,6 +5,8 @@ library(raster)
 library(rasterVis)
 library (RStoolbox)
 library(gridExtra) 
+library(ggplot2)
+library(viridis) 
 #fare il set della working directory
 setwd("D:/lab/AQUA")
 
@@ -70,10 +72,20 @@ plot(TAq)
 plotRGB(TAq, 1, 2, 3, stretch="Lin")
 #ggRGB(TAq, r=1, g=2, b=3, stretch="lin") # partendo da tre bande dell'immagine satellitare, possiamo unirle per creare un immagine a banda singola
 
+#utilizziamo un intero blocco con una singola legenda e plottiamo tutto insieme
 levelplot(TAq)
 cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
 #assegno i nomi
 levelplot(TAq,col.regions=cl, main="Variation of sea surface temperature",names.attr=c("2001","2007", "2014", "2021"))
+
+annuallist <- list.files(pattern="temp")
+annual_import <- lapply(annuallist,raster)
+#raggruppo i file importati
+annual <- stack(annual_import)
+annual
+#posso fare un level plot solo ora con dati melt
+levelplot(annual)
+
 
 TAqaggr<- aggregate(TAq, fact=10)
 plotRGB(TAqaggr, r=4, g=3, b=2, stretch="lin")
@@ -83,31 +95,33 @@ plot(TAqaggrPCA$map)
 TAqaggrPCA
 plotRGB(TAqaggrPCA$map, r=1,g=2,b=3, stretch="lin")
 str(TAqaggrPCA)
-pc1 <- TAqaggrPCA$map$PC1
-???????????????????????????????????????????
+
+#calcolo della deviazione standard
+#per l'analisi controlliamo le componenti della mappa all'interno di sent, e leghiamo il tutto alla prima variabile PC1
+
 pc1 <- TAqaggrPCA$map$PC1
 pc1sd5 <- focal(pc1, w=matrix(1/25, nrow=5, ncol=5), fun=sd)
 clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100)
 plot(pc1sd5, col=clsd)
 
-#library(ggplot2)
-#library(viridis) 
-p1 <- ggplot() +
+#rappresentiamo graficamente i dati con funzione ggplot
+
+t1 <- ggplot() +
 geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
 scale_fill_viridis(option = "magma")  +
 ggtitle("Standard deviation of PC1 by magma colour scale")
 
-p2 <- ggplot() +
+t2 <- ggplot() +
 geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
 scale_fill_viridis(option = "turbo")  +
 ggtitle("Standard deviation of PC1 by turbo colour scale")
 
-p3 <- ggplot() +
+t3 <- ggplot() +
 geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
 scale_fill_viridis(option = "mako")  +
 ggtitle("Standard deviation of PC1 by magma colour scale")
 
-p4 <- ggplot() +
+t4 <- ggplot() +
 geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
 scale_fill_viridis(option = "inferno")  +
 ggtitle("Standard deviation of PC1 by turbo colour scale")
