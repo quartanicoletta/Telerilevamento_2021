@@ -67,37 +67,40 @@ tlist
 import <- lapply(tlist,raster)
 TAq <- stack(import)
 #plot per vedere tutte le immagini insieme
-plot(TAq)
+#plot(TAq)
 #immagini sovrapposte con schema RGB
-plotRGB(TAq, 1, 2, 3, stretch="Lin")
-#ggRGB(TAq, r=1, g=2, b=3, stretch="lin") # partendo da tre bande dell'immagine satellitare, possiamo unirle per creare un immagine a banda singola
+#plotRGB(TAq, 1, 2, 3, stretch="Lin")
+ggRGB(TAq, r=1, g=2, b=3, stretch="lin") # partendo da tre bande dell'immagine satellitare, possiamo unirle per creare un immagine a banda singola
 
-#utilizziamo un intero blocco con una singola legenda e plottiamo tutto insieme
+#utilizziamo un intero blocco con una singola legenda e plottiamo tutto insieme in un grafico
 levelplot(TAq)
 cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
 #assegno i nomi
+#si riscontra l'aumento di temperatura con colore rosso e rosa
 levelplot(TAq,col.regions=cl, main="Variation of sea surface temperature",names.attr=c("2001","2007", "2014", "2021"))
 
-annuallist <- list.files(pattern="temp")
-annual_import <- lapply(annuallist,raster)
-#raggruppo i file importati
-annual <- stack(annual_import)
-annual
-#posso fare un level plot solo ora con dati melt
-levelplot(annual)
-
-
+#proseguo effettuando un'analisi multivariata dei miei dati
 TAqaggr<- aggregate(TAq, fact=10)
 plotRGB(TAqaggr, r=4, g=3, b=2, stretch="lin")
 TAqaggrPCA <- rasterPCA(TAqaggr)
 summary(TAqaggrPCA$model)
+#Importance of components:
+#                           Comp.1      Comp.2      Comp.3      Comp.4
+#Standard deviation     19.7211294 1.450629029 0.833299332 0.715111987
+#Proportion of Variance  0.9915609 0.005364986 0.001770345 0.001303779
+#Cumulative Proportion   0.9915609 0.996925876 0.998696221 1.000000000
+
 plot(TAqaggrPCA$map)
 TAqaggrPCA
+#names      :        PC1,        PC2,        PC3,        PC4 
+#min values : -38.923121, -18.689623,  -8.338087, -12.629175 
+#max values :  41.089306,   9.787526,   7.761835,   7.044111 
+
 plotRGB(TAqaggrPCA$map, r=1,g=2,b=3, stretch="lin")
 str(TAqaggrPCA)
 
 #calcolo della deviazione standard
-#per l'analisi controlliamo le componenti della mappa all'interno di sent, e leghiamo il tutto alla prima variabile PC1
+#per l'analisi controlliamo le componenti della mappa all'interno di set, e leghiamo il tutto alla prima variabile PC1
 
 pc1 <- TAqaggrPCA$map$PC1
 pc1sd5 <- focal(pc1, w=matrix(1/25, nrow=5, ncol=5), fun=sd)
