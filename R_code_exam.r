@@ -61,15 +61,21 @@ plot(temp21, col=cls)
 
 
 
-#per importare tutta la lista di files utilizzo lapply
+#voglio importare i file tutti insieme invece di usare raster e importarli uno per volta, uso quindi lapply
+#lapply: applicare la funzione raster a una lista di file (rlist), nel nostro caso i file tlst
+#la list.files: crea la lista che R utilizzerà per applicare la funzione lapply
+#con pattern ricerchiamo i file che ci servono in base alle caratteristiche comuni nel nome,come il fatto che tutti si chiamano temp
 tlist <- list.files(pattern="temp")
 tlist
 import <- lapply(tlist,raster)
+#ora possiamo creare un unico pacchetto di file con tutti quelli importati, lo facciamo con la funzione stack
+#stack function: abbiamo una lista di file raster e li mettiamo tutti insieme
 TAq <- stack(import)
 #plot per vedere tutte le immagini insieme
 #plot(TAq)
 #immagini sovrapposte con schema RGB
 #plotRGB(TAq, 1, 2, 3, stretch="Lin")
+#utilizzo ggrgb per una visualizzazione migliore delle immagini
 ggRGB(TAq, r=1, g=2, b=3, stretch="lin") # partendo da tre bande dell'immagine satellitare, possiamo unirle per creare un immagine a banda singola
 
 #utilizziamo un intero blocco con una singola legenda e plottiamo tutto insieme in un grafico
@@ -78,6 +84,14 @@ cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
 #assegno i nomi
 #si riscontra l'aumento di temperatura con colore rosso e rosa
 levelplot(TAq,col.regions=cl, main="Variation of sea surface temperature",names.attr=c("2001","2007", "2014", "2021"))
+
+temp02 <- brick("temp2002.nc")
+temp02 <- brick("temp2002.nc")
+Temp_dif <- ("temp2021.nc" -"temp2002.nc")
+clt <- colorRampPalette(c("blue","white","red"))(100)
+levelplot(tempdif, col.regions=clt)
+#nelle zone dal colore più evidente notiamo l'incremento della temperatura
+
 
 #proseguo effettuando un'analisi multivariata dei miei dati
 TAqaggr<- aggregate(TAq, fact=10)
