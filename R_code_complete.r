@@ -24,11 +24,11 @@
 # il mio primo codice in R per il telerilevamento!
 #importo la cartella dal mio sitema operativo 
 setwd("D:/lab/") # Windows
-#install.packages("raster")
+#install.packages("raster") installo il pacchetto necessario per lavorare
 library(raster)
 # la funzione brick genera file multistrato o bande
 p224r63_2011 <- brick("p224r63_2011_masked.grd")
-p224r63_2011
+p224r63_2011 #visualizzo le info sull'immagine
 plot(p224r63_2011)
 #plottaggio singole bande, così da ottenere le info su ogni banda
 #colour ramp palette è un vettore che ci permette di assegnare una tavolozza di colori per il file
@@ -169,6 +169,7 @@ dev.off()
 # Time series analysis
 # Greenland increase of temperature
 # Data and code from Emanuela Cosma
+#importo le librerie necessarie
 library(raster)
 library(rasterVis)
 setwd("D:/lab/greenland")
@@ -207,6 +208,9 @@ plot(TGr)
 #immagini sovrapposte con schema RGB
 plotRGB(TGr, 1, 2, 3, stretch="Lin")
 plotRGB(TGr, 2, 3, 4, stretch="Lin") #plot con valori della temperatura
+
+
+
 #installazione pacchetto metodi di visualizzazione per dati raster
 install.packages("rasterVis") 
 library(rasterVis)
