@@ -86,10 +86,10 @@ cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
 levelplot(TAq,col.regions=cl, main="Variation of sea surface temperature",names.attr=c("2001","2007", "2014", "2021"))
 
 temp02 <- brick("temp2002.nc")
-temp02 <- brick("temp2002.nc")
-Temp_dif <- ("temp2021.nc" -"temp2002.nc")
+temp21 <- brick("temp2021.nc")
+Temp_dif <- (temp21 - temp02)
 clt <- colorRampPalette(c("blue","white","red"))(100)
-levelplot(tempdif, col.regions=clt)
+levelplot(Temp_dif, col.regions=clt)
 #nelle zone dal colore più evidente notiamo l'incremento della temperatura
 
 
@@ -142,7 +142,7 @@ t4 <- ggplot() +
 geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
 scale_fill_viridis(option = "inferno")  +
 ggtitle("Standard deviation of PC1 by turbo colour scale")
-grid.arrange(p1, p2, p3, p4, nrow = 2)
+grid.arrange(t1, t2, t3, t4, nrow = 2)
 
 
 
