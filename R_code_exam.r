@@ -136,12 +136,12 @@ ggtitle("Standard deviation of PC1 by turbo colour scale")
 t3 <- ggplot() +
 geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
 scale_fill_viridis(option = "mako")  +
-ggtitle("Standard deviation of PC1 by magma colour scale")
+ggtitle("Standard deviation of PC1 by mako colour scale")
 
 t4 <- ggplot() +
 geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
 scale_fill_viridis(option = "inferno")  +
-ggtitle("Standard deviation of PC1 by turbo colour scale")
+ggtitle("Standard deviation of PC1 by inferno colour scale")
 grid.arrange(t1, t2, t3, t4, nrow = 2)
 
 
