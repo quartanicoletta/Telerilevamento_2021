@@ -10,57 +10,6 @@ library(viridis)
 #fare il set della working directory
 setwd("D:/lab/AQUA")
 
-
-
-#inserire le immagini, dare una color ramp palette e plottarle
-#temp21 <- brick("temp2021.nc")
-#plot(temp21)
-#cls <- colorRampPalette(c("red","magenta","yellow"))(100)
-#plot(temp21, col=cls)
-
-#temp02 <- brick("temp2002.nc")
-#plot(temp02)
-#cls <- colorRampPalette(c("red","magenta","yellow"))(100)
-#plot(temp02, col=cls)
-
-#constatere le differenze di temperatura con con la funzione differenza e plottarle
-#tempdif <- temp21 - temp02
-#plot(tempdif, col= cls)
-
-
-#temp02 <- brick("temp2002.nc")
-#plot(temp02)
-#cls <- colorRampPalette(c("red","magenta","yellow"))(100)
-#plot(temp02, col=cls)
-#plotRGB(temp02, r=1, g=2, b=3, stretch="lin")
-
-#temp07 <- brick("temp2007.nc")
-#plot(temp07)
-#cls <- colorRampPalette(c("red","magenta","yellow"))(100)
-#plot(temp07, col=cls)
-#plotRGB(temp07, r=1, g=2, b=3, stretch="lin")
-
-#temp14 <- brick("temp2014.nc")
-#plot(temp14)
-#cls <- colorRampPalette(c("red","magenta","yellow"))(100)
-#plot14(temp14, col=cls)
-#plotRGB(temp14, r=1, g=2, b=3, stretch="lin")
-
-#temp21 <- brick("temp2021.nc")
-#plot(temp21)
-#cls <- colorRampPalette(c("red","magenta","yellow"))(100)
-#plot(temp21, col=cls)
-#plotRGB(temp21, r=1, g=2, b=3, stretch="lin")
-
-
-#par(mfrow=c(4,1))
-#plot(temp02, col=cls)
-#plot(temp07, col=cls)
-#plot(temp14, col=cls)
-#plot(temp21, col=cls)
-
-
-
 #voglio importare i file tutti insieme invece di usare raster e importarli uno per volta, uso quindi lapply
 #lapply: applicare la funzione raster a una lista di file (rlist), nel nostro caso i file tlst
 #la list.files: crea la lista che R utilizzerà per applicare la funzione lapply
