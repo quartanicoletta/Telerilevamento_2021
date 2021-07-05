@@ -46,7 +46,7 @@ plot(p224r63_2011, col=cls)
 #B5 SWIR
 #B6 TIRS
 #B7 SWIR
-# will clean the current graph
+# con la seguente funzione ripulisco il mio grafico
 dev.off()
 #$ comando per legare immagine a una banda
 plot(p224r63_2011$B1_sre)
@@ -98,12 +98,13 @@ plotRGB(p224r63_2011,r=4,g=3,b=2,stretch="Lin")
 #si possono fare ulteriori inversioni spostando le bande su diversi componenti
 plotRGB(p224r63_2011,r=3,g=4,b=2,stretch="Lin")
 plotRGB(p224r63_2011,r=3,g=2,b=4,stretch="Lin")
-#ex MF 2x2
+#ex MF 2x2  #multiframe. Il primo parametro indica le righe, il secondo le colonne, la c è per creare il vettore
 par(mfrow=c(2,2))
-plotRGB(p224r63_2011,r=3,g=2,b=1,stretch="Lin")
-plotRGB(p224r63_2011,r=4,g=3,b=2,stretch="Lin")
-plotRGB(p224r63_2011,r=3,g=4,b=2,stretch="Lin")
-plotRGB(p224r63_2011,r=3,g=2,b=4,stretch="Lin")
+plotRGB(p224r63_2011,r=3,g=2,b=1,stretch="Lin") #visualizza l'immagine con i colori che l'occhio umano vede. stretch prende i valori delle singole bande e li dirada per fare in modo che non ci sia uno schiacciamento del colore
+plotRGB(p224r63_2011,r=4,g=3,b=2,stretch="Lin") #la componente red visualizza le riflettanze nell'infrarosso (layer 4). La vegetazione è in rosso. Zone più scure indicano una maggiore umidità
+plotRGB(p224r63_2011,r=3,g=4,b=2,stretch="Lin") #montando la banda 4 sul green il suolo nudo, senza vegetazione, viene indicato dal colore viola
+plotRGB(p224r63_2011,r=3,g=2,b=4,stretch="Lin") #infrarosso nel blu. Il suolo nudo è giallo
+
 #creare pdf dell'immagine caricata su R
 pdf("il_mio_primo_pdf_con_R.pdf")
 par(mfrow=c(2,2))
@@ -112,9 +113,9 @@ plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
 plotRGB(p224r63_2011,r=3,g=4,b=2,stretch="Lin")
 plotRGB(p224r63_2011,r=3,g=2,b=4,stretch="Lin")
 dev.off()
-# immagine con Histogram stretch=hist
+# immagine con Histogram stretch=hist otterrò un'immagine con una definizione molto più dettagliata
 plotRGB(p224r63_2011,r=3,g=4,b=2,stretch="Lin")
-plotRGB(p224r63_2011,r=3,g=4,b=2,stretch="hist")
+plotRGB(p224r63_2011,r=3,g=4,b=2,stretch="hist") #evidenzia maggiormente le zone più umide, colorandole di viola
 #funzione par con colori naturali, falsi colori, e falsi histogram stretch
 par(mfrow=c(3,1))
 plotRGB(p224r63_2011,r=3,g=2,b=1,stretch="Lin")
@@ -141,12 +142,12 @@ plot(p224r63_1988)
 #B5 SWIR
 #B6 TIRS
 #B7 SWIR
-plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin")
-plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin") #Plot con infrarosso
+plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin") #il violetto sulla parte destra delle immagini sono delle interferenze
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin") #Plot con infrarosso si evidenzia la vegetazione
 #fare par con 1988 e 2011
 par(mfrow=c(2,1))
 plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")
-plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin") #si vede nettamente il confine tra foresta e zone coltivate
 par(mfrow=c(2,2))
 plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")
 plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
@@ -173,11 +174,12 @@ dev.off()
 library(raster)
 library(rasterVis)
 setwd("D:/lab/greenland")
+#ogni immagine nella cartella greenland è uno strato che rappresenta la stima della temperatura
 #carichiamo il primo dei file del set, sono singoli dati. Non si usa brick ma raster
 #raster:carichiamo singoli dati, importiamo il primo
 lst_2000 <- raster("lst_2000.tif")
 #possiamo plottarlo
-plot(lst_2000)
+plot(lst_2000) #colori dal bianco al verde. La riflettanza viene data in bit (0/1)
 #procediamo con il file successivo
 lst_2005 <- raster("lst_2005.tif")
 plot(lst_2005)
@@ -196,10 +198,10 @@ plot(lst_2015)
 list.files()
 #con pattern ricerchiamo i file che ci servono in base alle caratteristiche comuni nel nome,come il fatto che tutti si chiamano lst
 rlist <- list.files(pattern="lst")
-rlist
+rlist #lista di tutti i file dentro la cartella greenland con, nel loro nome, la parola lst
 #lapply: x=lista dove applicare la funzione FUN= funzione raster da applicare (il tutto si applica a tutti i file lst)
 import <- lapply(rlist,raster)
-import
+import #visualizza le informazioni relative ai 4 file
 #ora possiamo creare un unico pacchetto di file con tutti quelli importati, lo facciamo con la funzione stack
 #stack function: abbiamo una lista di file raster e li mettiamo tutti insieme
 TGr <- stack(import) 
@@ -207,6 +209,9 @@ TGr <- stack(import)
 plot(TGr)
 #immagini sovrapposte con schema RGB
 plotRGB(TGr, 1, 2, 3, stretch="Lin")
+#red (primo livello) ho messo lst_2000, perciò se ci sono zone in rosso avrò valori più alti di lst nel 2000.
+#green (secondo livello) ho messo lst_2005, perciò se trovo dei colori verdi, significa che c'è un valore più alto nell'lst nel 2005.
+#blue (terzo livello) ho messo lst_2010 ci sono zone in blu avrò valori più alti di lst nel 2010.
 plotRGB(TGr, 2, 3, 4, stretch="Lin") #plot con valori della temperatura
 
 
@@ -226,9 +231,12 @@ levelplot(TGr)
 cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
 #poi riplottare
 levelplot(TGr, col.regions=cl)
+#ll grafico grigio sopra l'immagine indica la temperatura, come media della stessa colonnna o riga della griglia di bit.
+#valori bassi di temperatura, indicati da numeri interi di bit, sono rappresentati dal colore blu (sulla Gronelandia)
 #possiamo cambiare i titoli delle immagini con la funzione names.attr (per nominare i singoli attributi)
 #main è l'argomento, quindi nel nostro caso il titolo dellla mappa, messo tra virgolette perchè un testo
 levelplot(TGr,col.regions=cl, main="LST variation in time",names.attr=c("July 2000","July 2005", "July 2010", "July 2015"))
+#Usiamo i dati che riguardano lo scioglimento (melt). Immagini raccolte dal satellite Nimbus 7.
 #dati melt, creiamo una lista dei file con pattern comune "melt" o "annual"
 meltlist <- list.files(pattern="melt")
 #importo i file
@@ -237,15 +245,15 @@ melt_import <- lapply(meltlist,raster)
 melt <- stack(melt_import)
 melt
 #posso fare un level plot solo ora con dati melt
-levelplot(melt)
+levelplot(melt) #mostra i valori dello scioglimento dei ghiacci.
 #valori più alti >scioglimento
 #metricsalgebra applicato alle matrici per lo studio di dati temporali, facciamo la sottrazione tra primo e ultimo dato, mettiamo $ per legare uno strato all'altro
 melt_amount <- melt$X2007annual_melt - melt$X1979annual_melt
 #creo una nuova colorramppalette
 clb <- colorRampPalette(c("blue","white","red"))(100)
 #sia plot che levelplot
-plot(melt_amount, col=clb)
-levelplot(melt_amount, col.regions=clb)
+plot(melt_amount, col=clb) #tutte le zone rosse sono quelle dove dal 2007 al 1979 è avvenuto il maggior tasso di scioglimento
+levelplot(melt_amount, col.regions=clb) #il colore esterno è un NA, quindi assenza di valore
 
 #--------------------------------------------------------------------------
 
@@ -302,7 +310,17 @@ setwd("D:/lab/")
 #con brick carico un pacchetto di dati che importo dal sistema operativo 
 p224r63_2011 <-brick ("p224r63_2011_masked.grd")
 p224r63_2011
-plot (p224r63_2011) #verranno visualizzate tutte le bande da B1 a  B7
+#class      : RasterBrick 
+#dimensions : 1499, 2967, 4447533, 7  (nrow, ncol, ncell, nlayers)
+#resolution : 30, 30  (x, y)
+#extent     : 579765, 668775, -522705, -477735  (xmin, xmax, ymin, ymax)
+#crs        : +proj=utm +zone=22 +datum=WGS84 +units=m +no_defs 
+#source     : C:/lab/p224r63_2011_masked.grd 
+#names      :       B1_sre,       B2_sre,       B3_sre,       B4_sre,       B5_sre,        B6_bt,       B7_sre 
+#min values : 0.000000e+00, 0.000000e+00, 0.000000e+00, 1.196277e-02, 4.116526e-03, 2.951000e+02, 0.000000e+00 
+#max values :    0.1249041,    0.2563655,    0.2591587,    0.5592193,    0.4894984,  305.2000000,    0.3692634
+plot (p224r63_2011) #verranno visualizzate tutte le bande da B1 a  B7 e vedo la correlazione
+#se la correlazione è perfetta positivamente R=+1, mentre se la correlaione è perfetta negativamente R=-1.
 #Facciamo il plot della B1 contro B2, cambiando colore, PCH aumentando la dimensione dei punti
 plot(p224r63_2011$B1_sre,p224r63_2011$B2_sre, col="red", pch=19, cex=2)
 #invertiamo le due bande
@@ -325,9 +343,19 @@ plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="lin")
 plotRGB(p224r63_2011res, r=4, g=3, b=2, stretch="lin")
 #la funzione per fare la PCA, dove prendiamo i dati originali e facciamo passare un asse per i dati di variabilità maggiore e uno per il minore
 #rasterPCA prende il pacchetto di dati e lo compatta in un numero minore di bande
-p224r63_2011res_pca <- rasterPCA(p224r63_2011res)
+p224r63_2011res_pca <- rasterPCA(p224r63_2011res) #si crea una mappa in uscita e un modello
 #vediamo la varianza utilizzando la funzione summary, che è molto generica e base,dà un sommario del nostro modello
 summary(p224r63_2011res_pca$model) #così vediamo la varianza nelle varie bande
+#Importance of components:
+#                         Comp.1      Comp.2       Comp.3       Comp.4
+#Standard deviation     1.2050671 0.046154880 0.0151509526 4.575220e-03
+#Proportion of Variance 0.9983595 0.001464535 0.0001578136 1.439092e-05
+#Cumulative Proportion  0.9983595 0.999824022 0.9999818357 9.999962e-01
+#                             Comp.5       Comp.6       Comp.7
+#Standard deviation     1.841357e-03 1.233375e-03 7.595368e-04
+#Proportion of Variance 2.330990e-06 1.045814e-06 3.966086e-07
+#Cumulative Proportion  9.999986e-01 9.999996e-01 1.000000e+00
+#la prima componente spiega il 99% della varianza. Con le prime 3 bande spiego il 99,99%
 #con plot, prendo l'immagine modello la unisco alla mappa
 plot(p224r63_2011res_pca$map)
 p224r63_2011res_pca
@@ -335,6 +363,9 @@ p224r63_2011res_pca
 plotRGB(p224r63_2011res_pca$map, r=1,g=2,b=3, stretch="lin") #vediamo un'immagine che utilizza tutte e tre le componenti principali
 #per ottenere informazioni più complesse del file utilizzo la funzione str (structure)
 str(p224r63_2011res_pca)
+#Analisi PCA: genera delle nuove componenti che diminuiscono la correlazione iniziale e, con un numero minore di componenti, possiamo spiegare tutta l'immagine togliendo la correlazione.
+#E' importante fare la PCA per ridurre la correlazione tra le variabili quando, per esempio, si fa un'analisi con variabili molto correlate tra di loro a cui non è consigliato applicare un modello lineare.
+#In generale si applica l'analisi delle componenti principali se si ha un set di dati con molte variabili 
 
 #--------------------------------------------------------------------------
 
@@ -345,14 +376,15 @@ str(p224r63_2011res_pca)
 library(raster)
 library(RStoolbox)
 setwd("D:/lab/")
-#caricare immagine solar orbiter data con funzione brick
+#caricare immagine solar orbiter data con funzione brick, ha 3 layer e li unisce
 so <- brick("Solar_Orbiter_s_first_views_of_the_Sun_pillars.jpg")
 #visualizziamo i dettagli
 so
 #visualizziamo i livelli RGB
-plotRGB(so, 1,2,3, stretch="lin")
+plotRGB(so, 1,2,3, stretch="lin") #livello energetico molto alto di colore chiaro, livello energetico basso di colore scuro e livello energetico intermedio con colori intermedi
 #classifichiamo le immagini con la funzione nel pacchetto RStoolbox 
 #funzione che opera la classificazione non supervisionata (unsupervised classification)= unsuperClass
+#Capisce come i pixel si comportano in uno spazio multispettrale, creando alcune classi utilizzando dei pixel già conosciuti come campione (training set).
 #nClasses è il numero di classi, la associamo a un oggetto soc
 soc <- unsuperClass(so, nClasses=3)
 #plottiamo l'immagine per vedere cosa è stato creato in uscita
@@ -360,7 +392,7 @@ soc <- unsuperClass(so, nClasses=3)
 plot(soc$map)
 # funzione che fa in modo di utilizzare le stesse regole nei lavori= set.seed(42)
 #classificazione con 20 classi
-set.seed(42)
+set.seed(42) #funzione per fare in modo che l'immagine sia sempre uguale, utilizzando lo stesso training set
 sod <- unsuperClass(so, nClasses=20)
 plot(sod$map)
 #nuova immagine
@@ -380,7 +412,7 @@ plotRGB(gc, r=1,g=2,b=3, stretch="hist")
 #utilizziamo la classificazione del pacchetto
 gcc <- unsuperClass(gc, nClasses=3)
 #fare il plot dell'immagine
-plot(gcc$map)
+plot(gcc$map) #la zona centrale può essere un tipo di roccia caratteristico. Ha un valore di riflettanzamaggiore a cui è stato associato il valore 1 
 #facciamo la classificazione in 4 classi
 gcc4 <- unsuperClass(gc, nClasses=4)
 plot(gcc4$map)
@@ -434,6 +466,11 @@ defor2 <- brick("defor2.jpg")
 par(mfrow=c(2,1))
 plotRGB(defor1, r=1, g=2, b=3, stretch="lin")
 plotRGB(defor2, r=1, g=2, b=3, stretch="lin")
+defor1
+# names      : defor1.1, defor1.2, defor1.3 
+# values :        0,        0,        0 
+# max values :      255,      255,      255
+# NIR=defor1.1, RED=defor1.2
 #calcoliamo un indice di vegetazione,facendo la differenza tra le bande del NIR e red del defor1, uniamo la banda all'immagine con $
 #per ogni pixel abbiamo preso la banda del NIR  e del red, medesimo pixel per le stesse bande, fatto la differenza ottenendo la diffrence vegetation index
 dvi1 <- defor1$defor1.1 - defor1$defor1.2 
@@ -441,7 +478,11 @@ dvi1 <- defor1$defor1.1 - defor1$defor1.2
 plot(dvi1)
 #facciamo una color ramp palette per ottenere una classificazione migliore nel nostro plot
 cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100) 
-plot(dv1, col=cl, main="DVI at time 1")
+plot(dvi1, col=cl, main="DVI at time 1")
+defor2
+# names      : defor2.1, defor2.2, defor2.3 
+# min values :        0,        0,        0 
+# max values :      255,      255,      255
 #facciamo la stessa cosa per il calcolo del DVI2
 dvi2 <- defor2$defor2.1 - defor2$defor2.2
 plot(dvi2, col=cl, main="DVI at time 2")
@@ -493,7 +534,7 @@ copNDVI <- reclassify (copNDVI, cbind (252, 255, NA))
 plot(copNDVI)
 #utilizziamo levevlplot contenuto in rastervis per originare i livelli, perciò richiamiamo la libreria
 library(rasterVis)
-levelplot(copNDVI)
+levelplot(copNDVI) #I valori più alti sono nelle foreste amazzonica, del borneo, centro africa e del Nord America. Nel resto i valori sono molti bassi, per i deserti in Africa e in Asia e per la neve ai poli.
 
 #--------------------------------------------------------------------------
 
@@ -514,6 +555,7 @@ stewd("D:/lab/")
 defor1 <- brick ("defor1.jpg")
 plotRGB (defor1, r=1, g=2, b=3, stretch="lin")
 ggRGB(defor1, r=1, g=2, b=3, stretch="lin") # partendo da tre bande dell'immagine satellitare, possiamo unirle per creare un immagine a banda singola
+#immagine, 3 layer e componenti e strecth. Plotta anche le coordinate spaziali sugli assi x e y
 
 defor2 <- brick ("defor2.jpg")
 plotRGB (defor2, r=1, g=2, b=3, stretch="lin")
@@ -530,6 +572,16 @@ grid.arrange(p1, p2, nrow=2) #così possiamo arrangiare ogni tipo di griglia
 
 #utilizziamo la unsupervised classification cioè che le azioni che vengono svolte dal software sono scelte da noi, con un'immagine e un numero di campioni e classi da inserire
 d1c <- unsuperClass(defor1, nClasses=2)
+d1c
+# $map
+# class      : RasterLayer 
+# dimensions : 478, 714, 341292  (nrow, ncol, ncell)
+# resolution : 1, 1  (x, y)
+# extent     : 0, 714, 0, 478  (xmin, xmax, ymin, ymax)
+# crs        : NA 
+# source     : memory
+# names      : layer 
+# values     : 1, 2  (min, max) 
 #visualizziamo i dati
 plot(d1c$map) #leghiamo la mappa all'immagine e vediamo le due classi: con set.seed() visualizziamo foresta tropicale (1) e parte agricola (2)
 d2c <- unsuperClass(defor2, nClasses=2)
