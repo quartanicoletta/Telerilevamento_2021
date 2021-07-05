@@ -32,7 +32,7 @@ levelplot(TAq)
 cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
 #assegno i nomi
 #si riscontra l'aumento di temperatura con colore rosso e rosa
-levelplot(TAq,col.regions=cl, main="Variation of sea surface temperature",names.attr=c("2001","2007", "2014", "2021"))
+levelplot(TAq,col.regions=cl, main="Variation of sea surface temperature",names.attr=c("2002","2007", "2014", "2021"))
 
 temp02 <- brick("temp2002.nc")
 temp21 <- brick("temp2021.nc")
